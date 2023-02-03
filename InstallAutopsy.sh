@@ -138,7 +138,7 @@ then
     sleep 5
 else 
     echo "Autopsy installation : "
-    wget -q --show-progress "https://github.com/sleuthkit/autopsy/releases/download/autopsy-$versionAutopsy/autopsy-$versionAutopsy.zip" /home/$USER/Autopsy
+    wget -q --show-progress "https://github.com/sleuthkit/autopsy/releases/download/autopsy-"$versionAutopsy"/autopsy-"$versionAutopsy".zip" /home/$USER/Autopsy  
     cd /home/$USER/Autopsy
     unzip autopsy-$versionAutopsy.zip
     cd autopsy-$versionAutopsy
