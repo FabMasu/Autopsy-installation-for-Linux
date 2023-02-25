@@ -1,81 +1,85 @@
 #!/bin/bash
 
-# Installation script for Autopsy.
-# Runs on Debian (Ubuntu, Mint, ...)
-# Tested on Linux Mint 20.1 and Autopsy 4.17.0 with Sleuthkit 4.10.1-1
-# By Fabrice MASURIER.
-
+# Installation script for forensic software Autopsy GNU-Linux OS.
+# This script wroks for Debian type distributions (Ubuntu, Mint, ...)
+# Tested on Linux Mint 21.1 and Autopsy 4.20.0 with Sleuthkit 4.12.0-1
+# By Fabrice MASURIER with the help of Nicolas CANOVA (le testeur).
 
 echo "Installation of Autopsy on a linux X64 computer"
-echo "Installation of componants"
-echo "Installation of Testdisk"
+echo "Installation of dependencies"
 
 if [ -d "/home/Desktop" ];then
 alias Bureau='Desktop';
-echo "Your folders are not french, your desktop is DESKTOP!";
-else echo "Your folders are french, Vous avez un dossier 'Bureau'.";
+echo "Your DESKTOP seems to be the english way!";
+else echo "Vos dossiers ont été francisés Vous avez un dossier 'Bureau'.";
 fi
-
-testdsk=/usr/bin/testdisk
-
-if [ -e $testdsk ] 
-then
-    echo "Testdisk is already installed!"
-    sleep 5
-else 
-    sudo dpkg --configure -a
-    sudo apt-get update 
-    sudo apt-get install testdisk
-fi
-
+read -p "What is the last SleuthKit version? Just give the version number without the '-1' at the end (ex:4.12.0) : " versionSleuthKit
+read -p "What is the last Autopsy version? As well, just give the version number ex:4.20.0) : " versionAutopsy
 clear
 
-echo "Checking of ImageMagick installation...'"
-imgmgk=/usr/local/lib/ImageMagick*
-if [ -e $imgmgk ] 
+echo "Preparing the sources..."
+sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
+if [[ $? -ne 0 ]]; then
+    echo "Failling to prepare the sources." >>/dev/stderr
+    exit 1
+fi
+
+echo "prerequistes installation..."
+sudo apt update && \
+    sudo apt -y install build-essential autoconf libtool automake git zip wget ant \
+        libde265-dev libheif-dev \
+        libpq-dev \
+        testdisk libafflib-dev libewf-dev libvhdi-dev libvmdk-dev \
+        libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad \
+        gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x \
+        gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
+clear
+echo "Netbeans installation..."
+flatpak -y install netbeans
+clear
+
+if [[ $? -ne 0 ]]; then
+    echo "Failling to install prérequistes." >>/dev/stderr
+    exit 1
+fi
+
+
+echo "Checking for Java..."
+sleep 5
+testjava=/usr/lib/jvm/bellsoft*
+if [ -e $testjava ] 
 then
-    echo "ImageMagick already installed!"
-    sleep 5
-else 
-   # Imagemagick Installation 
-    echo "ImageMagick installation, please wait..."
-    nbproc= nproc
-    sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
-    sudo apt-get update
-    sudo apt-get install build-essential autoconf libtool git-core -y
-    sudo apt-get build-dep imagemagick libmagickcore-dev libde265 libheif
-    clear
-    cd /usr/src/ 
-    sudo git clone https://github.com/strukturag/libde265.git 
-    sudo git clone https://github.com/strukturag/libheif.git 
-    cd libde265/ 
-    sudo ./autogen.sh 
-    sudo ./configure 
-    sudo make -j$nbproc
-    sudo make install -j$nbproc
-    clear
-    cd /usr/src/libheif/ 
-    sudo ./autogen.sh 
-    sudo ./configure 
-    sudo make -j$nbproc
-    sudo make install -j$nbproc
-    clear
-    cd /usr/src/ 
-    sudo wget https://www.imagemagick.org/download/ImageMagick.tar.gz 
-    sudo tar xf ImageMagick.tar.gz 
-    cd ImageMagick-7*
-    sudo ./configure --with-heic=yes 
-    sudo make -j$nbproc
-    sudo make install -j$nbproc
-    sudo ldconfig 
+    echo "Java 8 is already installed!"
+     sleep 5
+else echo "Bellsoft Java 8 Installation.."
+    pushd /usr/src/ &&
+        wget -q -O - https://download.bell-sw.com/pki/GPG-KEY-bellsoft | sudo apt-key add - &&
+        echo "deb [arch=amd64] https://apt.bell-sw.com/ stable main" | sudo tee /etc/apt/sources.list.d/bellsoft.list &&
+        sudo apt update &&
+        sudo apt -y install bellsoft-java8-full &&
+        popd
+    if [[ $? -ne 0 ]]; then
+        echo "Failling to install Bellsoft java 8" >>/dev/stderr
+        exit 1
+    fi
 fi
 clear
+sudo updatedb
+
+echo "Runtime installation..."
+sudo apt-get install bellsoft-java8-runtime-full
+#echo "Prérequis d'Autopsy installés."
+#echo "Java path at /usr/lib/jvm/bellsoft-java8-full-amd64: "
+export JAVA_HOME=”/usr/lib/jvm/bellsoft-java8-full-amd64″
+export JDK_HOME=”${JAVA_HOME}”
+export PATH=”${JAVA_HOME}/bin:${PATH}”
+sudo echo "JAVA_HOME='/usr/lib/jvm/bellsoft-java8-full-amd64'" >> .bashrc
 
 workingdir=`pwd`
 repauto=/home/$USER/Autopsy
 if [ -d $repauto ] 
 then
-    echo "Autopsy folder already exists!"
+    echo "The Autopsy folder already exists!"
     sleep 5
 else 
     mkdir /home/$USER/Autopsy
@@ -84,71 +88,53 @@ else
 fi
 clear
 
-echo "Checking of Java installation"
-sleep 5
-testjava=/usr/lib/jvm/bellsoft*
-if [ -e $testjava ] 
-then
-    echo "Java 8 is already installed!"
-     sleep 5
-else 
-    echo "Installation of java"
-    echo "Keys acquisition : "
-    wget -q -O - "https://download.bell-sw.com/pki/GPG-KEY-bellsoft" | sudo apt-key add -
-    echo "Sources copy : "
-    echo "deb [arch=amd64] https://apt.bell-sw.com/ stable main" | sudo tee /etc/apt/sources.list.d/bellsoft.list
-    echo "Copying from Ubuntu and installation of java 8."
-    sudo apt-get update
-    sudo apt-get install bellsoft-java8-full 
-    export JAVA_HOME=/usr/lib/jvm/bellsoft-java8-full-amd64
-    export PATH=$PATH:$JAVA_HOME/bin
-    source /etc/environment
-    echo "Java localisation : " $JAVA_HOME
-    echo "Java path localisation : " $PATH
-    echo "JAVA_HOME=/usr/lib/jvm/bellsoft-java8-full-amd64" |sudo  tee -a /etc/environment
-    sleep 3
-fi
-clear
-
-read -p "Last SleuthKit version? Just give the version number without '-1' on end : " versionSleuthKit
-read -p "Last autopsy version? Just give, as well, the version number : " versionAutopsy
-clear
-
 testsk=/usr/share/java/sleuthkit-$versionSleuthKit.jar
 if [ -e $testsk ] 
 then
-    echo "The Sleuthkit version you want is already installed!"
+    echo "The same Sleuthkit version is already installed!"
+    echo "Sleuthkit won't be réinstalled!"
     sleep 5
 else 
     sudo dpkg --configure -a
-    echo "SleuthKit installation : " 
+    echo "SleuthKit installation : "    
+    cd /home/$USER/Autopsy 
     wget -q --show-progress "https://github.com/sleuthkit/sleuthkit/releases/download/sleuthkit-"$versionSleuthKit"/sleuthkit-java_"$versionSleuthKit"-1_amd64.deb" /home/$USER/Autopsy
-    cd /home/$USER/Autopsy
-    sudo dpkg -i *.deb
-    sudo apt-get install -fy
     sleep 5
+    sudo dpkg -i /home/$USER/Autopsy/sleuthkit-java_$versionSleuthKit-1_amd64.deb
+    sudo apt-get -y install -f
+   sleep 5
 fi
 clear
 
 testauto=/home/$USER/Autopsy/autopsy-$versionAutopsy
 if [ -e $testauto ] 
 then
-    echo "The Autopsy version you want is already installed!" 
-    echo "Autopsy won't be reinstalled!"
+    echo "The same Autopsy version is already installed!" 
+    echo "Autopsy won't be réinstalled!"
     sleep 5
 else 
+    cd /home/$USER/Autopsy
     echo "Autopsy installation : "
-    wget -q --show-progress "https://github.com/sleuthkit/autopsy/releases/download/autopsy-"$versionAutopsy"/autopsy-"$versionAutopsy".zip" /home/$USER/Autopsy  
+    wget -q --show-progress "https://github.com/sleuthkit/autopsy/releases/download/autopsy-$versionAutopsy/autopsy-$versionAutopsy.zip" /home/$USER/Autopsy
     cd /home/$USER/Autopsy
     unzip autopsy-$versionAutopsy.zip
-    cd autopsy-$versionAutopsy
-    sh unix_setup.sh
-    sleep 5
-       
+    echo "jdkhome=/usr/lib/jvm/bellsoft-java8-full-amd64" >> ~/Autopsy/autopsy-$versionAutopsy/etc/autopsy.conf
+    echo "JAVA_HOME=/usr/lib/jvm/bellsoft-java8-full-amd64" >> ~/Autopsy/autopsy-$versionAutopsy/etc/autopsy.conf
+    echo "JDK=/usr/lib/jvm/bellsoft-java8-full-amd64" >> ~/Autopsy/autopsy-$versionAutopsy/etc/autopsy.conf
+    
+    # Installation 
+    jdkhome=$JAVA_PATH        
+    chown -R $(whoami)
+    cd /home/$USER/Autopsy/autopsy-$versionAutopsy
+    chmod u+x unix_setup.sh 
+    bash ./unix_setup.sh -j /usr/lib/jvm/bellsoft-java8-full-amd64
+    
+    # Icon creation on the desk
+    clear    
     cd //home/$USER/Autopsy/autopsy-$versionAutopsy
-    echo "Deleting files .zip and .deb"
-    rm /home/$USER/Autopsy/autopsy-$versionAutopsy.zip|rm /home/$USER/Autopsy/sleuthkit-java_"$versionSleuthKit"_amd64.deb
-    echo "Creation of link and  icon on the desktop"
+    echo "Removing .zip et .deb"
+    rm /home/$USER/Autopsy/autopsy-$versionAutopsy.zip|rm /home/$USER/Autopsy/sleuthkit-java_$versionSleuthKit-1_amd64.deb
+    echo "Creation of a starting link on the desk"
     /bin/echo "[Desktop Entry]" >/home/$USER/Bureau/Autopsy.desktop
     /bin/echo "Version=$versionAutopsy" >>/home/$USER/Bureau/Autopsy.desktop
     /bin/echo "Type=Application" >>/home/$USER/Bureau/Autopsy.desktop
@@ -160,27 +146,30 @@ else
     /bin/chmod 711 /home/$USER/Bureau/Autopsy.desktop
     /bin/chmod 777 /home/$USER/Autopsy/autopsy-$versionAutopsy/bin/autopsy
     /bin/chmod 777 /home/$USER/Autopsy/autopsy-$versionAutopsy/icon.ico
-    echo "Autopsy will start. Once the software will run, it will create configuration files, you will then close it, but let the terminal continue to run for modules installation. On the first run, a dialog should come but is hidden behind the starting panel. This dialog is asking the user to use the central repository. It is highly recommanded to use this tool. If nothing moves, click 2X on TAB then Enter."
+    echo "Autopsy will start. Once done, it will create its own configuration folders,
+you could close it, so, but leave the terminal carry on working for modules installation. 
+At qtart, a dialog will ask you to use the Central repository. You should use it."
     sleep 20
     clear
-	echo "If nothing moves, click 2X on TAB then Enter."
-    echo ok | sh /home/$USER/Autopsy/autopsy-$versionAutopsy/bin/autopsy
+    echo ok | sh /home/$USER/Autopsy/autopsy-$versionAutopsy/bin/autopsy --nosplash
     
 fi
+
 clear
 
 cd /home/$USER/Bureau
 testmaster=/home/$USER/.autopsy/dev/python_modules/Skype.py
 if [ -e $testmaster ] 
 then
-    echo "Master folder is already installed!"
+    echo "Masters folder is already installed!"
     sleep 5
 else 
     echo "Python plugins installation."
     wget -q --show-progress "https://github.com/markmckinnon/Autopsy-Plugins/archive/master.zip"
     unzip master.zip
     mv Autopsy-Plugins-master/* /home/$USER/.autopsy/dev/python_modules/
-   
+    mv Custom_Autopsy_Plugins-master/* /home/$USER/.autopsy/dev/python_modules/
+
     wget -q --show-progress https://github.com/sleuthkit/autopsy_addon_modules/blob/master/IngestModules/Chrome_Passwords/chrome_password_identifier/ChromePasswords.py
     wget -q --show-progress https://github.com/sleuthkit/autopsy_addon_modules/blob/master/IngestModules/GoogleDrive/google_drive/GDrive.py
     wget -q --show-progress https://github.com/sleuthkit/autopsy_addon_modules/blob/master/IngestModules/IE%20Tiles/ie_tiles/IETiles.py
@@ -202,12 +191,12 @@ cd /home/$USER/Bureau
 testmod=/home/$USER/Bureau/ModulesNetBeans/autopsy-ahbm.nbm
 if [ -e $testmod ] 
 then
-    echo "The netbeans modules folder is already installed!"
+    echo "Netbeans modules is already instest déjà installé!"
     sleep 5
 else 
     mkdir ModulesNetBeans
     chmod 770 ModulesNetBeans
-    echo "The NetBeans modules are in a fonder on the desktop. To install them, on Autopsy, go to Tools, plugins,on the dialog choose downloaded modules et select the files in the folder on the desktop. They will be installed."
+    echo "Netbeans module are on the desk. To install them in Autopsy, go to Tools, plugins, and in the open box, choose Downloaded modules and select all the folder packs on the desk. They will be installed."
     sleep 10
     wget https://github.com/sleuthkit/autopsy_addon_modules/raw/master/IngestModules/sdhash/autopsy-ahbm.nbm
     wget https://github.com/sleuthkit/autopsy_addon_modules/raw/master/IngestModules/CopyMove/de-fau-copymoveforgerydetection.nbm
@@ -219,9 +208,8 @@ else
 fi
 
 clear
-echo "Installation is complete. Have a nice day!"
+echo "Installation is now done. Have a nice day!"
 sleep 10
-
 
 
 
