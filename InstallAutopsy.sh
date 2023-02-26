@@ -17,12 +17,24 @@ read -p "What is the last SleuthKit version? Just give the version number withou
 read -p "What is the last Autopsy version? As well, just give the version number ex:4.20.0) : " versionAutopsy
 clear
 
+# Removing older versions
+
+echo "Removing older versions."
+cd /home/$USER
+sudo rm -rf /home/$USER/Autopsy /home/$USER/./autopsy 
+sudo rm -rf /home/$USER/Bureau/Autopsy.desktop
+sudo apt remove -y sleuthkit-java
+
+# Preparing sources
+
 echo "Preparing the sources..."
 sudo sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
 if [[ $? -ne 0 ]]; then
     echo "Failling to prepare the sources." >>/dev/stderr
     exit 1
 fi
+
+# Prerequistes installation
 
 echo "prerequistes installation..."
 sudo apt update && \
@@ -32,7 +44,8 @@ sudo apt update && \
         testdisk libafflib-dev libewf-dev libvhdi-dev libvmdk-dev \
         libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad \
         gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x \
-        gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio
+        gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio flatpak
+    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 clear
 echo "Netbeans installation..."
 flatpak -y install netbeans
@@ -43,6 +56,7 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
+# Java installation
 
 echo "Checking for Java..."
 sleep 5
@@ -65,7 +79,6 @@ else echo "Bellsoft Java 8 Installation.."
 fi
 clear
 sudo updatedb
-
 echo "Runtime installation..."
 sudo apt-get install bellsoft-java8-runtime-full
 #echo "Prérequis d'Autopsy installés."
@@ -74,6 +87,8 @@ export JAVA_HOME=”/usr/lib/jvm/bellsoft-java8-full-amd64″
 export JDK_HOME=”${JAVA_HOME}”
 export PATH=”${JAVA_HOME}/bin:${PATH}”
 sudo echo "JAVA_HOME='/usr/lib/jvm/bellsoft-java8-full-amd64'" >> .bashrc
+
+# Sleuthkit installation
 
 workingdir=`pwd`
 repauto=/home/$USER/Autopsy
@@ -105,6 +120,8 @@ else
    sleep 5
 fi
 clear
+
+# Autopsy installation
 
 testauto=/home/$USER/Autopsy/autopsy-$versionAutopsy
 if [ -e $testauto ] 
@@ -148,14 +165,17 @@ else
     /bin/chmod 777 /home/$USER/Autopsy/autopsy-$versionAutopsy/icon.ico
     echo "Autopsy will start. Once done, it will create its own configuration folders,
 you could close it, so, but leave the terminal carry on working for modules installation. 
-At qtart, a dialog will ask you to use the Central repository. You should use it."
+At start, a dialog will ask you to use the Central repository. You should use it."
     sleep 20
     clear
+    echo "Close the application, do not close the terminal it will close itself"
     echo ok | sh /home/$USER/Autopsy/autopsy-$versionAutopsy/bin/autopsy --nosplash
     
 fi
 
 clear
+
+# Modules installation
 
 cd /home/$USER/Bureau
 testmaster=/home/$USER/.autopsy/dev/python_modules/Skype.py
@@ -210,6 +230,5 @@ fi
 clear
 echo "Installation is now done. Have a nice day!"
 sleep 10
-
 
 
