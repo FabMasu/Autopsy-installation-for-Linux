@@ -1,7 +1,7 @@
 # Autopsy-installation-for-Linux (English version)
 Installation script for Autopsy.
 Runs on Debian X64 (Ubuntu, Mint, ...) distributions
-Tested on Linux Mint 20.1 and Autopsy 4.17.0 with Sleuthkit 4.10.1-1
+Tested on Linux Mint 21.1 and Autopsy 4.20.0 with Sleuthkit 4.12.0-1
 By Fabrice MASURIER with the help of Nicolas CANOVA.
 
 The goal of this installation script is to help the software and most of modules installation.
