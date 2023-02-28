@@ -34,9 +34,9 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-# Prerequistes installation
+# Prerequisites installation
 
-echo "prerequistes installation..."
+echo "prerequisites installation..."
 sudo apt update && \
     sudo apt -y install build-essential autoconf libtool automake git zip wget ant \
         libde265-dev libheif-dev \
@@ -52,7 +52,7 @@ flatpak -y install netbeans
 clear
 
 if [[ $? -ne 0 ]]; then
-    echo "Failling to install prérequistes." >>/dev/stderr
+    echo "Failling to install prérequisites." >>/dev/stderr
     exit 1
 fi
 
