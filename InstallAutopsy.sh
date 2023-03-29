@@ -227,8 +227,7 @@ else
     wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/cleappanalyzer.nbm
     wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/lnk_file_viewer.nbm
     wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/recentactivity-macos.v02b.nbm
-    wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/rleappanalyzer.nbm
-    wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/vleappanalyzer.nbm
+    wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/rleappanalyzer.nbm   
     mv autopsy-ahbm.nbm /home/$USER/Bureau/ModulesNetBeans/
     mv de-fau-copymoveforgerydetection.nbm /home/$USER/Bureau/ModulesNetBeans/
     mv org-sleuthkit-autopsy-modules-virustotalonlinecheck.nbm /home/$USER/Bureau/ModulesNetBeans/
@@ -239,7 +238,6 @@ else
     mv lnk_file_viewer.nbm /home/$USER/Bureau/ModulesNetBeans/
     mv recentactivity-macos.v02b.nbm /home/$USER/Bureau/ModulesNetBeans/
     mv rleappanalyzer.nbm /home/$USER/Bureau/ModulesNetBeans/
-    mv vleappanalyzer.nbm /home/$USER/Bureau/ModulesNetBeans/
     rm /home/$USER/Bureau/InstallAutopsy.sh
 fi
 
