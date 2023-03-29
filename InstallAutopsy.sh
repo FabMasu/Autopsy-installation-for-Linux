@@ -221,9 +221,25 @@ else
     wget https://github.com/sleuthkit/autopsy_addon_modules/raw/master/IngestModules/sdhash/autopsy-ahbm.nbm
     wget https://github.com/sleuthkit/autopsy_addon_modules/raw/master/IngestModules/CopyMove/de-fau-copymoveforgerydetection.nbm
     wget https://github.com/sleuthkit/autopsy_addon_modules/raw/master/IngestModules/VirusTotal/org-sleuthkit-autopsy-modules-virustotalonlinecheck.nbm
+    wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/Event_Log_Viewer.nbm
+    wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/Prefetch_File_Viewer.nbm
+    wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/chainsaw.nbm
+    wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/cleappanalyzer.nbm
+    wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/lnk_file_viewer.nbm
+    wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/recentactivity-macos.v02b.nbm
+    wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/rleappanalyzer.nbm
+    wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/vleappanalyzer.nbm
     mv autopsy-ahbm.nbm /home/$USER/Bureau/ModulesNetBeans/
     mv de-fau-copymoveforgerydetection.nbm /home/$USER/Bureau/ModulesNetBeans/
     mv org-sleuthkit-autopsy-modules-virustotalonlinecheck.nbm /home/$USER/Bureau/ModulesNetBeans/
+    mv Event_Log_Viewer.nbm /home/$USER/Bureau/ModulesNetBeans/
+    mv Prefetch_File_Viewer.nbm /home/$USER/Bureau/ModulesNetBeans/
+    mv chainsaw.nbm /home/$USER/Bureau/ModulesNetBeans/
+    mv cleappanalyzer.nbm /home/$USER/Bureau/ModulesNetBeans/
+    mv lnk_file_viewer.nbm /home/$USER/Bureau/ModulesNetBeans/
+    mv recentactivity-macos.v02b.nbm /home/$USER/Bureau/ModulesNetBeans/
+    mv rleappanalyzer.nbm /home/$USER/Bureau/ModulesNetBeans/
+    mv vleappanalyzer.nbm /home/$USER/Bureau/ModulesNetBeans/
     rm /home/$USER/Bureau/InstallAutopsy.sh
 fi
 
