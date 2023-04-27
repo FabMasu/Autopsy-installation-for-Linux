@@ -77,7 +77,7 @@ else echo "Bellsoft Java 8 Installation.."
 	echo "Sources : "
 	echo "deb [arch=amd64] https://apt.bell-sw.com/ stable main" | sudo tee /etc/apt/sources.list.d/bellsoft.list
 	sleep 5
-	echo "Copie from Ubuntu server et java 8 installation."
+	echo "Copie from Ubuntu server and java 8 installation."
 	sudo apt-get update
 	sudo apt-get install bellsoft-java8-full 
 fi
