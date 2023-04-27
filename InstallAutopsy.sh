@@ -51,7 +51,7 @@ echo "Netbeans installation..."
 flatpak -y install netbeans
 clear
 
-if [[ $? -ne 0 ]]; then
+if [ $? -ne 0 ]; then
     echo "Failling to install prérequisites." >>/dev/stderr
     exit 1
 fi
@@ -65,20 +65,19 @@ if [ -e $testjava ]
 then
     echo "Java 8 is already installed!"
      sleep 5
-else echo "Bellsoft Java 8 Installation.."
-    pushd /usr/src/ &&
+else echo "Bellsoft Java 8 Installation.."   
         wget -q -O - https://download.bell-sw.com/pki/GPG-KEY-bellsoft | sudo apt-key add - &&
         echo "deb [arch=amd64] https://apt.bell-sw.com/ stable main" | sudo tee /etc/apt/sources.list.d/bellsoft.list &&
         sudo apt update &&
         sudo apt -y install bellsoft-java8-full &&
-        popd
+        
     if [[ $? -ne 0 ]]; then
         echo "Failling to install Bellsoft java 8" >>/dev/stderr
         exit 1
     fi
 fi
 clear
-sudo updatedb
+
 echo "Runtime installation..."
 sudo apt-get install bellsoft-java8-runtime-full
 #echo "Prérequis d'Autopsy installés."
