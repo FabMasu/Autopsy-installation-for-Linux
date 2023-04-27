@@ -2,7 +2,7 @@
 
 # Installation script for forensic software Autopsy GNU-Linux OS.
 # This script wroks for Debian type distributions (Ubuntu, Mint, ...)
-# Tested on Linux Mint 21.1 and Autopsy 4.20.0 with Sleuthkit 4.12.0-1
+# Tested on Ubuntu 22.04.2LTS, Linux Mint 21.1 and Autopsy 4.20.0 with Sleuthkit 4.12.0-1
 # By Fabrice MASURIER with the help of Nicolas CANOVA (le testeur).
 
 echo "Installation of Autopsy on a linux X64 computer"
@@ -63,26 +63,31 @@ sleep 5
 testjava=/usr/lib/jvm/bellsoft*
 if [ -e $testjava ] 
 then
-    echo "Java 8 is already installed!"
-     sleep 5
+	echo "Java 8 is already installed!"
+    	sleep 5
 else echo "Bellsoft Java 8 Installation.."
-    pushd /usr/src/ &&
-        wget -q -O - https://download.bell-sw.com/pki/GPG-KEY-bellsoft | sudo apt-key add - &&
-        echo "deb [arch=amd64] https://apt.bell-sw.com/ stable main" | sudo tee /etc/apt/sources.list.d/bellsoft.list &&
-        sudo apt update &&
-        sudo apt -y install bellsoft-java8-full &&
-        popd
-    if [[ $? -ne 0 ]]; then
-        echo "Failling to install Bellsoft java 8" >>/dev/stderr
-        exit 1
-    fi
+	workingdir=`pwd`
+	mkdir /home/$USER/Autopsy
+	chmod 770 -R /home/$USER/Autopsy
+	cd /home/$USER/Autopsy
+	echo "java installation"
+	echo "Keys acquisition : "
+	wget -q -O - "https://download.bell-sw.com/pki/GPG-KEY-bellsoft" | sudo apt-key add -
+	sleep 5
+	echo "Sources : "
+	echo "deb [arch=amd64] https://apt.bell-sw.com/ stable main" | sudo tee /etc/apt/sources.list.d/bellsoft.list
+	sleep 5
+	echo "Copie from Ubuntu server et java 8 installation."
+	sudo apt-get update
+	sudo apt-get install bellsoft-java8-full 
 fi
+sleep 10
 clear
-sudo updatedb
+
+# Java runtime installation
+
 echo "Runtime installation..."
 sudo apt-get install bellsoft-java8-runtime-full
-#echo "Prérequis d'Autopsy installés."
-#echo "Java path at /usr/lib/jvm/bellsoft-java8-full-amd64: "
 export JAVA_HOME=”/usr/lib/jvm/bellsoft-java8-full-amd64″
 export JDK_HOME=”${JAVA_HOME}”
 export PATH=”${JAVA_HOME}/bin:${PATH}”
