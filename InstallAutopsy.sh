@@ -38,7 +38,7 @@ fi
 
 echo "prerequisites installation..."
 sudo apt update && \
-    sudo apt -y install build-essential autoconf libtool automake git zip wget ant \
+    sudo apt -y install gcc make perl build-essential autoconf libtool automake git zip wget ant \
         libde265-dev libheif-dev \
         libpq-dev \
         testdisk libafflib-dev libewf-dev libvhdi-dev libvmdk-dev \
@@ -51,7 +51,7 @@ echo "Netbeans installation..."
 flatpak -y install netbeans
 clear
 
-if [[ $? -ne 0 ]]; then
+if [ $? -ne 0 ]; then
     echo "Failling to install prérequisites." >>/dev/stderr
     exit 1
 fi
@@ -67,9 +67,6 @@ then
     	sleep 5
 else echo "Bellsoft Java 8 Installation.."
 	workingdir=`pwd`
-	mkdir /home/$USER/Autopsy
-	chmod 770 -R /home/$USER/Autopsy
-	cd /home/$USER/Autopsy
 	echo "java installation"
 	echo "Keys acquisition : "
 	wget -q -O - "https://download.bell-sw.com/pki/GPG-KEY-bellsoft" | sudo apt-key add -
@@ -165,7 +162,7 @@ else
     /bin/echo "Exec=sh /home/$USER/Autopsy/autopsy-$versionAutopsy/bin/autopsy" >>/home/$USER/Bureau/Autopsy.desktop
     /bin/echo "Name=AUTOPSY" >>/home/$USER/Bureau/Autopsy.desktop
     /bin/echo "Icon=/home/$USER/Autopsy/autopsy-$versionAutopsy/icon.ico" >>/home/$USER/Bureau/Autopsy.desktop
-    /bin/chmod 711 /home/$USER/Bureau/Autopsy.desktop
+    /bin/chmod 777 /home/$USER/Bureau/Autopsy.desktop
     /bin/chmod 777 /home/$USER/Autopsy/autopsy-$versionAutopsy/bin/autopsy
     /bin/chmod 777 /home/$USER/Autopsy/autopsy-$versionAutopsy/icon.ico
     echo "Autopsy will start. Once done, it will create its own configuration folders,
