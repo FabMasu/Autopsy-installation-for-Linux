@@ -17,7 +17,7 @@ When passing the mouse on "ZIP file" the location (and then) the version of auto
 
 When passing the mouse on "Java .deb Debian package" the location (and then) the version of sleuthkit you'll get appears at the bottom of the site, note it (by now, it is:sleuthkit.4.12.0-1_amd64.deb)
 
-After the installation, allow the icon on the desktop to run Autopsy.
+After the installation, allow the icon on the desktop to run Autopsy if it is not.
 
 If it don't run properly, try the official help there: 
 https://github.com/sleuthkit/autopsy/blob/develop/Running_Linux_OSX.md
