@@ -17,7 +17,7 @@ read -p "What is the last SleuthKit version? Just give the version number withou
 read -p "What is the last Autopsy version? As well, just give the version number ex:4.20.0) : " versionAutopsy
 clear
 
-# Removing older versions
+# removing older versions
 
 echo "Removing older versions."
 cd /home/$USER
@@ -34,58 +34,60 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
-# Prerequisites installation
+# Prerequistes installation
 
-echo "prerequisites installation..."
+echo "prerequistes installation..."
 sudo apt update && \
-    sudo apt -y install build-essential autoconf libtool automake git zip wget ant \
+    sudo apt -y install \
+        openjdk-17-jdk openjdk-17-jre \
+        build-essential autoconf libtool automake git zip wget ant \
         libde265-dev libheif-dev \
         libpq-dev \
         testdisk libafflib-dev libewf-dev libvhdi-dev libvmdk-dev \
         libgstreamer1.0-0 gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-bad \
         gstreamer1.0-plugins-ugly gstreamer1.0-libav gstreamer1.0-tools gstreamer1.0-x \
         gstreamer1.0-alsa gstreamer1.0-gl gstreamer1.0-gtk3 gstreamer1.0-qt5 gstreamer1.0-pulseaudio flatpak
+if [[ $? -ne 0 ]]; then
+    echo "Failed to install necessary dependencies" >>/dev/stderr
+    exit 1
+fi
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+
+
 clear
 echo "Netbeans installation..."
 flatpak -y install netbeans
 clear
 
 if [[ $? -ne 0 ]]; then
-    echo "Failling to install prérequisites." >>/dev/stderr
+    echo "Failling to install prérequistes." >>/dev/stderr
     exit 1
 fi
 
 # Java installation
-
-echo "Checking for Java..."
+echo "Java 17 installation: "
+update-java-alternatives -l | grep java-1.17
 sleep 5
-testjava=/usr/lib/jvm/bellsoft*
-if [ -e $testjava ] 
-then
-    echo "Java 8 is already installed!"
-     sleep 5
-else echo "Bellsoft Java 8 Installation.."   
-        wget -q -O - https://download.bell-sw.com/pki/GPG-KEY-bellsoft | sudo apt-key add - &&
-        echo "deb [arch=amd64] https://apt.bell-sw.com/ stable main" | sudo tee /etc/apt/sources.list.d/bellsoft.list &&
-        sudo apt update &&
-        sudo apt -y install bellsoft-java8-full &&
-        
-    if [[ $? -ne 0 ]]; then
-        echo "Failling to install Bellsoft java 8" >>/dev/stderr
-        exit 1
-    fi
-fi
-clear
 
-echo "Runtime installation..."
-sudo apt-get install bellsoft-java8-runtime-full
+#echo "Checking for Java..."
+#sleep 5
+#testjava=/usr/local/jdk-17
+#if [ -e $testjava ] 
+#then
+#    echo "Java 17 is already installed!"
+#    exit 1
+#fi
+
 #echo "Prérequis d'Autopsy installés."
-#echo "Java path at /usr/lib/jvm/bellsoft-java8-full-amd64: "
-export JAVA_HOME=”/usr/lib/jvm/bellsoft-java8-full-amd64″
+#echo "Java path at /usr/lib/jvm/java-17-openjdk-amd64: "
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 export JDK_HOME=”${JAVA_HOME}”
 export PATH=”${JAVA_HOME}/bin:${PATH}”
-sudo echo "JAVA_HOME='/usr/lib/jvm/bellsoft-java8-full-amd64'" >> .bashrc
+sudo echo "JAVA_HOME='/usr/lib/jvm/java-17-openjdk-amd64'" >> .bashrc
+
+
+export PATH=$JAVA_HOME/bin:$PATH
 
 # Sleuthkit installation
 
@@ -134,16 +136,16 @@ else
     wget -q --show-progress "https://github.com/sleuthkit/autopsy/releases/download/autopsy-$versionAutopsy/autopsy-$versionAutopsy.zip" /home/$USER/Autopsy
     cd /home/$USER/Autopsy
     unzip autopsy-$versionAutopsy.zip
-    echo "jdkhome=/usr/lib/jvm/bellsoft-java8-full-amd64" >> ~/Autopsy/autopsy-$versionAutopsy/etc/autopsy.conf
-    echo "JAVA_HOME=/usr/lib/jvm/bellsoft-java8-full-amd64" >> ~/Autopsy/autopsy-$versionAutopsy/etc/autopsy.conf
-    echo "JDK=/usr/lib/jvm/bellsoft-java8-full-amd64" >> ~/Autopsy/autopsy-$versionAutopsy/etc/autopsy.conf
+    echo "jdkhome=/usr/lib/jvm/java-17-openjdk-amd64" >> ~/Autopsy/autopsy-$versionAutopsy/etc/autopsy.conf
+    echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> ~/Autopsy/autopsy-$versionAutopsy/etc/autopsy.conf
+    echo "JDK=/usr/lib/jvm/java-17-openjdk-amd64" >> ~/Autopsy/autopsy-$versionAutopsy/etc/autopsy.conf
     
     # Installation 
     jdkhome=$JAVA_PATH        
     chown -R $(whoami)
     cd /home/$USER/Autopsy/autopsy-$versionAutopsy
     chmod u+x unix_setup.sh 
-    bash ./unix_setup.sh -j /usr/lib/jvm/bellsoft-java8-full-amd64
+    bash ./unix_setup.sh -j /usr/lib/jvm/java-17-openjdk-amd64 -n autopsy
     
     # Icon creation on the desk
     clear    
@@ -220,28 +222,15 @@ else
     wget https://github.com/sleuthkit/autopsy_addon_modules/raw/master/IngestModules/sdhash/autopsy-ahbm.nbm
     wget https://github.com/sleuthkit/autopsy_addon_modules/raw/master/IngestModules/CopyMove/de-fau-copymoveforgerydetection.nbm
     wget https://github.com/sleuthkit/autopsy_addon_modules/raw/master/IngestModules/VirusTotal/org-sleuthkit-autopsy-modules-virustotalonlinecheck.nbm
-    wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/Event_Log_Viewer.nbm
-    wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/Prefetch_File_Viewer.nbm
-    wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/chainsaw.nbm
-    wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/cleappanalyzer.nbm
-    wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/lnk_file_viewer.nbm
-    wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/recentactivity-macos.v02b.nbm
-    wget https://github.com/markmckinnon/Autopsy-NBM-Plugins/blob/main/Plugin-Modules/rleappanalyzer.nbm   
     mv autopsy-ahbm.nbm /home/$USER/Bureau/ModulesNetBeans/
     mv de-fau-copymoveforgerydetection.nbm /home/$USER/Bureau/ModulesNetBeans/
     mv org-sleuthkit-autopsy-modules-virustotalonlinecheck.nbm /home/$USER/Bureau/ModulesNetBeans/
-    mv Event_Log_Viewer.nbm /home/$USER/Bureau/ModulesNetBeans/
-    mv Prefetch_File_Viewer.nbm /home/$USER/Bureau/ModulesNetBeans/
-    mv chainsaw.nbm /home/$USER/Bureau/ModulesNetBeans/
-    mv cleappanalyzer.nbm /home/$USER/Bureau/ModulesNetBeans/
-    mv lnk_file_viewer.nbm /home/$USER/Bureau/ModulesNetBeans/
-    mv recentactivity-macos.v02b.nbm /home/$USER/Bureau/ModulesNetBeans/
-    mv rleappanalyzer.nbm /home/$USER/Bureau/ModulesNetBeans/
     rm /home/$USER/Bureau/InstallAutopsy.sh
 fi
 
 clear
 echo "Installation is now done. Have a nice day!"
 sleep 10
+
 
 
