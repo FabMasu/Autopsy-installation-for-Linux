@@ -70,17 +70,6 @@ echo "Java 17 installation: "
 update-java-alternatives -l | grep java-1.17
 sleep 5
 
-#echo "Checking for Java..."
-#sleep 5
-#testjava=/usr/local/jdk-17
-#if [ -e $testjava ] 
-#then
-#    echo "Java 17 is already installed!"
-#    exit 1
-#fi
-
-#echo "Prérequis d'Autopsy installés."
-#echo "Java path at /usr/lib/jvm/java-17-openjdk-amd64: "
 export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 export JDK_HOME=”${JAVA_HOME}”
 export PATH=”${JAVA_HOME}/bin:${PATH}”
