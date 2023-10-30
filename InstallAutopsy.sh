@@ -181,7 +181,7 @@ else
     unzip master.zip
     mv Autopsy-Plugins-master/* /home/$USER/.autopsy/dev/python_modules/
     mv Custom_Autopsy_Plugins-master/* /home/$USER/.autopsy/dev/python_modules/
-    chmod 777 /home/$USER/.autopsy/dev/python_modules/
+    chmod 777 -R /home/$USER/.autopsy/dev/python_modules/
 
     wget -q --show-progress https://github.com/sleuthkit/autopsy_addon_modules/blob/master/IngestModules/Chrome_Passwords/chrome_password_identifier/ChromePasswords.py | chmod 777 ChromePasswords.py    
     wget -q --show-progress https://github.com/sleuthkit/autopsy_addon_modules/blob/master/IngestModules/GoogleDrive/google_drive/GDrive.py | chmod 777 google_drive/GDrive.py    
