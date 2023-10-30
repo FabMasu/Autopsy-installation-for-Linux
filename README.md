@@ -13,6 +13,7 @@ Type in a terminal
 sh InstallAutopsy.sh 
 
 On debian, the same but on SU (if no sudoer).
+
 On Ubuntu, install by Snap.
 
 go to https://www.autopsy.com/download/ 
