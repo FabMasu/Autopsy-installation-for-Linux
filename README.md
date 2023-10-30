@@ -13,6 +13,7 @@ Type in a terminal
 sh InstallAutopsy.sh 
 
 On debian, the same but on SU (if no sudoer).
+On Ubuntu, install by Snap.
 
 go to https://www.autopsy.com/download/ 
 When passing the mouse on "ZIP file" the location (and then) the version of autopsy you'll get appears at the bottom of the site, note it (by now, it is:autopsy.4.20.0.zip)
