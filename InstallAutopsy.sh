@@ -3,7 +3,7 @@
 # Installation script for forensic software Autopsy GNU-Linux OS.
 # This script wroks for Debian type distributions (Ubuntu, Mint, ...)
 # Tested on Linux Mint 21.1 and Autopsy 4.20.0 with Sleuthkit 4.12.0-1
-# By Fabrice MASURIER with the help of Nicolas CANOVA (le testeur).
+# By Fabrice MASURIER with the help of Nicolas CANOVA (le testeur) and a few Ntuche.
 
 echo "Installation of Autopsy on a linux X64 computer"
 echo "Installation of dependencies"
