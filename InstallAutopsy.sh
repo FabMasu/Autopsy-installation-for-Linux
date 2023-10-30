@@ -150,9 +150,10 @@ else
     /bin/echo "Exec=sh /home/$USER/Autopsy/autopsy-$versionAutopsy/bin/autopsy" >>/home/$USER/Bureau/Autopsy.desktop
     /bin/echo "Name=AUTOPSY" >>/home/$USER/Bureau/Autopsy.desktop
     /bin/echo "Icon=/home/$USER/Autopsy/autopsy-$versionAutopsy/icon.ico" >>/home/$USER/Bureau/Autopsy.desktop
-    /bin/chmod 711 /home/$USER/Bureau/Autopsy.desktop
+    /bin/chmod 777 /home/$USER/Bureau/Autopsy.desktop
     /bin/chmod 777 /home/$USER/Autopsy/autopsy-$versionAutopsy/bin/autopsy
     /bin/chmod 777 /home/$USER/Autopsy/autopsy-$versionAutopsy/icon.ico
+    chmod 777 /home/$USER/Bureau/Autopsy.desktop
     echo "Autopsy will start. Once done, it will create its own configuration folders,
 you could close it, so, but leave the terminal carry on working for modules installation. 
 At start, a dialog will ask you to use the Central repository. You should use it."
@@ -179,13 +180,14 @@ else
     unzip master.zip
     mv Autopsy-Plugins-master/* /home/$USER/.autopsy/dev/python_modules/
     mv Custom_Autopsy_Plugins-master/* /home/$USER/.autopsy/dev/python_modules/
+    chmod 777 /home/$USER/.autopsy/dev/python_modules/
 
-    wget -q --show-progress https://github.com/sleuthkit/autopsy_addon_modules/blob/master/IngestModules/Chrome_Passwords/chrome_password_identifier/ChromePasswords.py
-    wget -q --show-progress https://github.com/sleuthkit/autopsy_addon_modules/blob/master/IngestModules/GoogleDrive/google_drive/GDrive.py
-    wget -q --show-progress https://github.com/sleuthkit/autopsy_addon_modules/blob/master/IngestModules/IE%20Tiles/ie_tiles/IETiles.py
-    wget -q --show-progress https://github.com/sleuthkit/autopsy_addon_modules/blob/master/IngestModules/iPhone_Backup_Plist_Analyzer/connected_iphone_analyzer/Iphones.py
-    wget -q --show-progress https://github.com/sleuthkit/autopsy_addon_modules/blob/master/IngestModules/Skype/skype_analyzer/Skype.py
-    wget -q --show-progress https://github.com/sleuthkit/autopsy_addon_modules/blob/master/IngestModules/Windows_Communication_App/windows_communication_App/WindowsCommAppFileIngestModule.py
+    wget -q --show-progress https://github.com/sleuthkit/autopsy_addon_modules/blob/master/IngestModules/Chrome_Passwords/chrome_password_identifier/ChromePasswords.py | chmod 777 ChromePasswords.py    
+    wget -q --show-progress https://github.com/sleuthkit/autopsy_addon_modules/blob/master/IngestModules/GoogleDrive/google_drive/GDrive.py | chmod 777 google_drive/GDrive.py    
+    wget -q --show-progress https://github.com/sleuthkit/autopsy_addon_modules/blob/master/IngestModules/IE%20Tiles/ie_tiles/IETiles.py | chmod 777 IETiles.py    
+    wget -q --show-progress https://github.com/sleuthkit/autopsy_addon_modules/blob/master/IngestModules/iPhone_Backup_Plist_Analyzer/connected_iphone_analyzer/Iphones.py | chmod 777 Iphones.py    
+    wget -q --show-progress https://github.com/sleuthkit/autopsy_addon_modules/blob/master/IngestModules/Skype/skype_analyzer/Skype.py | chmod 777 Skype.py    
+    wget -q --show-progress https://github.com/sleuthkit/autopsy_addon_modules/blob/master/IngestModules/Windows_Communication_App/windows_communication_App/WindowsCommAppFileIngestModule.py | chmod 777 WindowsCommAppFileIngestModule.py    
     
     mv ChromePasswords.py /home/$USER/.autopsy/dev/python_modules/
     mv GDrive.py /home/$USER/.autopsy/dev/python_modules/
@@ -205,7 +207,7 @@ then
     sleep 5
 else 
     mkdir ModulesNetBeans
-    chmod 770 ModulesNetBeans
+    chmod 777 ModulesNetBeans
     echo "Netbeans module are on the desk. To install them in Autopsy, go to Tools, plugins, and in the open box, choose Downloaded modules and select all the folder packs on the desk. They will be installed."
     sleep 10
     wget https://github.com/sleuthkit/autopsy_addon_modules/raw/master/IngestModules/sdhash/autopsy-ahbm.nbm
@@ -214,6 +216,7 @@ else
     mv autopsy-ahbm.nbm /home/$USER/Bureau/ModulesNetBeans/
     mv de-fau-copymoveforgerydetection.nbm /home/$USER/Bureau/ModulesNetBeans/
     mv org-sleuthkit-autopsy-modules-virustotalonlinecheck.nbm /home/$USER/Bureau/ModulesNetBeans/
+    chmod 777 -R /home/$USER/Bureau/ModulesNetBeans/
     rm /home/$USER/Bureau/InstallAutopsy.sh
 fi
 
