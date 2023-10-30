@@ -135,6 +135,7 @@ else
     cd /home/$USER/Autopsy/autopsy-$versionAutopsy
     chmod u+x unix_setup.sh 
     bash ./unix_setup.sh -j /usr/lib/jvm/java-17-openjdk-amd64 -n autopsy
+     chmod 777 -R /home/$USER/Autopsy
     
     # Icon creation on the desk
     clear    
