@@ -139,7 +139,7 @@ else
     
     # Icon creation on the desk
     clear    
-    cd //home/$USER/Autopsy/autopsy-$versionAutopsy
+    cd /home/$USER/Autopsy/autopsy-$versionAutopsy
     echo "Removing .zip et .deb"
     rm /home/$USER/Autopsy/autopsy-$versionAutopsy.zip|rm /home/$USER/Autopsy/sleuthkit-java_$versionSleuthKit-1_amd64.deb
     echo "Creation of a starting link on the desk"
